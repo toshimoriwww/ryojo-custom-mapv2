@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
-from google.cloud.firestore_v1.types import GeoPoint # GeoPointの型をインポート
+from google.cloud.firestore import GeoPoint # 修正箇所：正しいインポート元に変更
 import os
 
 # Flaskアプリを初期化
