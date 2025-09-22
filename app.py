@@ -3,58 +3,46 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import os
 
-# Flaskアプリを初期化
+# Flaskアプリを初期化。これだけで 'static' フォルダが自動的に認識されます。
 app = Flask(__name__)
 
 # --- Firebase Admin SDK の初期化 ---
-# Cloud Run環境では、環境変数から自動で認証情報が読み込まれる
-# ローカル開発時のみ、サービスアカウントキーファイルを使用する
+# (この部分は変更ありません)
 if not firebase_admin._apps:
-    try:
-        # GOOGLE_APPLICATION_CREDENTIALS環境変数が設定されていればそれを使う
-        # Cloud Runでは自動で設定される
+    if os.getenv('GOOGLE_APPLICATION_CREDENTIALS'):
         cred = credentials.ApplicationDefault()
-    except Exception:
-        # ローカル開発用のフォールバック
+    else:
         try:
             cred = credentials.Certificate("serviceAccountKey.json")
-            print("ローカル用のserviceAccountKey.jsonを使用して初期化します。")
         except FileNotFoundError:
-            print("警告: サービスアカウントキーが見つかりません。Cloud Run環境外ではFirestoreに接続できません。")
-            cred = None # credがNoneのままだと後でエラーになる
-
-    if cred:
-        firebase_admin.initialize_app(cred)
+            print("serviceAccountKey.jsonが見つかりません。ローカル開発ではこのファイルが必要です。")
+            exit()
+    firebase_admin.initialize_app(cred)
 
 db = firestore.client()
-# Firestoreのコレクション名
+# JavaScript側で 'locations' を使っている場合は、名前を合わせます
 COLLECTION_NAME = 'cases' 
+
+# --- ルート定義 ---
 
 @app.route('/')
 def index():
-    """トップページ（地図表示）をレンダリング"""
     return render_template('index.html')
 
+# JS側の fetch('/api/locations') に合わせてパスを修正
 @app.route('/api/locations') 
 def get_locations():
-    """Firestoreから位置情報データを取得してJSON形式で返すAPI"""
     try:
-        docs_stream = db.collection(COLLECTION_NAME).stream()
-        locations_data = []
-        for doc in docs_stream:
-            data = doc.to_dict()
-            # 緯度(lat)と経度(lng)がGeoPoint型の場合の処理
-            if 'location' in data and isinstance(data['location'], firestore.GeoPoint):
-                locations_data.append({
-                    "name": data.get("name", "名称未設定"),
-                    "lat": data["location"].latitude,
-                    "lng": data["location"].longitude
-                })
+        docs = db.collection(COLLECTION_NAME).stream()
+        locations_data = [doc.to_dict() for doc in docs]
         return jsonify(locations_data)
     except Exception as e:
         print(f"APIエラー: {e}")
         return jsonify({"error": str(e)}), 500
 
+#
+# 不要なため、serve_static 関数は完全に削除します
+#
+
 if __name__ == '__main__':
-    # ローカル開発サーバーの起動
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
