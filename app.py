@@ -1,12 +1,13 @@
 from flask import Flask, render_template, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
+from google.cloud.firestore_v1.types import GeoPoint # GeoPointの型をインポート
 import os
 
 # Flaskアプリを初期化
 app = Flask(__name__)
 
-# --- Firebase Admin SDK の初期化（修正箇所） ---
+# --- Firebase Admin SDK の初期化 ---
 # このロジックで、Cloud Run上かローカル環境かを正しく判定します
 if not firebase_admin._apps:
     # Cloud RunなどのGCP環境では 'K_SERVICE' 環境変数が自動的に設定されます
@@ -42,12 +43,19 @@ def get_locations():
         locations_data = []
         for doc in docs:
             data = doc.to_dict()
-            # GeoPointをJSONにシリアライズ可能な形式に変換
-            if 'location' in data and hasattr(data['location'], 'latitude') and hasattr(data['location'], 'longitude'):
-                data['location'] = {
-                    'latitude': data['location'].latitude,
-                    'longitude': data['location'].longitude
-                }
+            # --- GeoPointをJSONに変換する処理を、より安全な方法に修正 ---
+            if 'location' in data and data['location'] is not None:
+                # 'location'フィールドが本当にGeoPoint型かを確認
+                if isinstance(data['location'], GeoPoint):
+                    data['location'] = {
+                        'latitude': data['location'].latitude,
+                        'longitude': data['location'].longitude
+                    }
+                else:
+                    # GeoPointではない場合、エラーにせず警告ログを出し、locationをNoneに設定
+                    print(f"Warning: Document {doc.id} has a 'location' field that is not a GeoPoint. Type is {type(data['location']).__name__}")
+                    data['location'] = None
+            
             locations_data.append(data)
         return jsonify(locations_data)
     except Exception as e:
@@ -56,3 +64,4 @@ def get_locations():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+
