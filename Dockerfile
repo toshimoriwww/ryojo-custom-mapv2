@@ -1,5 +1,5 @@
 # Python 3.9 の公式イメージを使用
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # 作業ディレクトリを設定
 WORKDIR /app
