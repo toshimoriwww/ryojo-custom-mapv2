@@ -1,0 +1,48 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Cesiumビューアが画面いっぱいに表示されるように */
+    font-family: sans-serif;
+    color: #333;
+}
+
+#cesiumContainer {
+    width: 100vw; /* ビューポート幅 */
+    height: 100vh; /* ビューポート高 */
+}
+
+/* ポップアップのスタイル (Cesiumのデフォルトinfoboxを想定) */
+.cesium-infoBox {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    max-width: 350px;
+    font-size: 14px;
+}
+
+.cesium-infoBox h2 {
+    font-size: 18px;
+    color: #0056b3;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.cesium-infoBox p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.cesium-infoBox img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.cesium-infoBox strong {
+    color: #555;
+}

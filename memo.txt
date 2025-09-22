@@ -1,0 +1,96 @@
+    // 呉市の座標にカメラを移動
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(132.55, 34.243, 500), // Longitude, Latitude, Height (meters)
+      orientation: {
+        heading: Cesium.Math.toRadians(0.0),
+        pitch: Cesium.Math.toRadians(-45.0),
+        roll: 0.0
+
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>両城地区 3Dマップ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Cesium 3D Map</title>
+  <!-- Cesium JS and CSS -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  
+  <!-- Inter font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Basic CSS reset and styling for the container */
+    html, body, #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+
+  <script>
+    // --- Cesium Initialization ---
+
+    // Cesium ionのデフォルトアクセストークンを設定
+    // Provided new access token
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ODNkYWVjYi01ZTliLTQ2MTctYmZiOS1kNDQ3MTIxZjYzYjYiLCJpZCI6MzIxOTcyLCJpYXQiOjE3NTI2NTYzOTd9.m81UdYhfay_9fi85IjYCKQN7QC9lO8VQN25qV7LyQ7k';
+
+    // HTMLの 'cesiumContainer' divにCesium Viewerを初期化
+    // Initializing with default widgets
+    const viewer = new Cesium.Viewer('cesiumContainer');
+
+    // Google Photorealistic 3D Tilesを非同期で読み込む
+    (async () => {
+      try {
+        // Cesium ion経由でタイルセットを生成
+        const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+        viewer.scene.primitives.add(tileset);
+      } catch (error) {
+        console.error(`Error creating Google Photorealistic 3D Tileset: ${error}`);
+        // ユーザー向けにエラーメッセージを表示
+        const errorDiv = document.createElement('div');
+        errorDiv.style.position = 'absolute';
+        errorDiv.style.top = '10px';
+        errorDiv.style.left = '10px';
+        errorDiv.style.padding = '10px 15px';
+        errorDiv.style.backgroundColor = 'rgba(200, 50, 50, 0.9)';
+        errorDiv.style.color = 'white';
+        errorDiv.style.borderRadius = '8px';
+        errorDiv.style.zIndex = '1000';
+        errorDiv.textContent = '3Dタイルの読み込みに失敗しました。コンソールを確認してください。';
+        document.body.appendChild(errorDiv);
+      }
+    })();
+
+    // 呉市の座標にカメラを移動
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(132.55, 34.243, 500), // Longitude, Latitude, Height (meters)
+      orientation: {
+        heading: Cesium.Math.toRadians(0.0),
+        pitch: Cesium.Math.toRadians(-45.0),
+        roll: 0.0
+      },
+    });
+  </script>
+</body>
+</html>

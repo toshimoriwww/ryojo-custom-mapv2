@@ -1,0 +1,10 @@
+.gcloudignore
+__pycache__/
+venv/
+*.pyc
+*.pyo
+*.pyd
+*~
+# FirebaseサービスアカウントキーはGitにコミットしないようにし、GCPにデプロイする際にも含めない
+# Cloud Runデプロイ時は、Cloud Runサービスのサービスアカウントが自動で認証される
+serviceAccountKey.json

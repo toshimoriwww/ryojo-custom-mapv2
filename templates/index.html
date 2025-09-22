@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>両城地区 3Dマップ</title>
+    
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+
+    <div id="filter-container">
+        <button class="filter-btn active" data-status="all">すべて</button>
+        <button class="filter-btn" data-status="私道">私道</button>
+        <button class="filter-btn" data-status="認定市道">認定市道</button>
+        <button class="filter-btn" data-status="私有地">私有地</button>
+        
+        <div class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="toggle-3d-btn"> 
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-label">3D建物を表示</span>
+        </div>
+    </div>
+
+    <div id="info-sidebar" class="sidebar-hidden">
+        <button id="close-sidebar-btn">&times;</button>
+        <div id="sidebar-content"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

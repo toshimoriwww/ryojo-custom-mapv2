@@ -1,0 +1,152 @@
+html, body, #cesiumContainer {
+    width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+    font-family: sans-serif;
+}
+
+#filter-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.filter-btn {
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.filter-btn:hover { background-color: #f0f0f0; }
+.filter-btn.active { background-color: #007bff; color: white; border-color: #007bff; }
+
+
+/* ↓↓↓ トグルスイッチ用のスタイルを追加 ↓↓↓ */
+.toggle-container {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+.toggle-label {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #333;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #28a745; /* 緑色 */
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+
+#info-sidebar {
+    position: absolute;
+    top: 15px;
+    left: 15px; /* 右側から左側に変更 */
+    width: 350px;
+    max-height: calc(100% - 30px); /* 高さが画面を超えないように */
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: 8px;
+    overflow-y: auto;
+    /* 初期状態では左に隠す */
+    opacity: 0;
+    transform: translateX(-120%);
+    pointer-events: none; /* 隠れているときはクリックさせない */
+}
+
+#info-sidebar.sidebar-visible {
+    /* 表示状態 */
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto; /* 表示されたらクリックできるようにする */
+}
+
+#close-sidebar-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #eee;
+    border: none;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #888;
+}
+#close-sidebar-btn:hover {
+    background: #ddd;
+}
+
+#sidebar-content {
+    padding: 20px;
+}
+#sidebar-content h2 { 
+    margin-top: 0; 
+    color: #333; 
+    font-size: 1.3em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+#sidebar-content img { 
+    width: 100%; /* 横幅いっぱいに表示 */
+    height: auto; 
+    border-radius: 4px; 
+    margin-bottom: 15px;
+}
+#sidebar-content p { 
+    margin: 10px 0; 
+    line-height: 1.6; 
+    font-size: 0.95em;
+    color: #555;
+}
+#sidebar-content strong {
+    color: #111;
+}
